@@ -44,9 +44,13 @@
     <!-- VoLTE icon switch -->
     <string name="status_bar_volte">VoLTE</string>
 	
-     <!-- Caffeine QS Tile -->
-     <string name="quick_settings_caffeine_label">Caffeine</string>
-     <string name="accessibility_quick_settings_caffeine_off">Caffeine off</string>
-     <string name="accessibility_quick_settings_caffeine_on">Caffeine on</string>
+    <!-- Caffeine QS Tile -->
+    <string name="quick_settings_caffeine_label">Caffeine</string>
+    <string name="accessibility_quick_settings_caffeine_off">Caffeine off</string>
+    <string name="accessibility_quick_settings_caffeine_on">Caffeine on</string>
+
+    <!-- Screenshot QS tile -->
+    <string name="quick_settings_screenshot_label">Screenshot</string>
+    <string name="quick_settings_region_screenshot_label">Partial screenshot</string>
 
 </resources>

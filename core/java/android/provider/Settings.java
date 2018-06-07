@@ -4338,6 +4338,18 @@ public final class Settings {
         public static final String BUTTON_BACKLIGHT_ON_TOUCH_ONLY = "button_backlight_on_touch_only";
 
         /**
+         * Setting to allow setting rounded corner size and content padding
+         */
+        public static final String SYSUI_ROUNDED_SIZE = "sysui_rounded_size";
+        public static final String SYSUI_ROUNDED_CONTENT_PADDING = "sysui_rounded_content_padding";
+
+        /**
+          * Setting to disable rounded corner preferences and use frameworks values instead
+          * @hide
+          */
+         public static final String SYSUI_ROUNDED_FWVALS = "sysui_rounded_fwvals";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *

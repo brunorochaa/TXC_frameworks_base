@@ -145,6 +145,7 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.WindowManagerGlobal;
 import android.view.accessibility.AccessibilityManager;
+import android.os.Process;
 import android.widget.FrameLayout;
 import android.widget.DateTimeView;
 import android.widget.ImageSwitcher;
@@ -174,6 +175,7 @@ import com.android.keyguard.KeyguardHostView.OnDismissAction;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.ViewMediatorCallback;
+import com.android.settingslib.Utils;
 import com.android.systemui.ActivityStarterDelegate;
 import com.android.systemui.AutoReinflateContainer;
 import com.android.systemui.DejankUtils;
@@ -215,6 +217,7 @@ import com.android.systemui.qs.QSTileHost;
 import com.android.systemui.qs.QuickStatusBarHeader;
 import com.android.systemui.qs.car.CarQSFragment;
 import com.android.systemui.recents.Recents;
+import com.android.systemui.recents.RecentsActivity;
 import com.android.systemui.recents.ScreenPinningRequest;
 import com.android.systemui.recents.events.EventBus;
 import com.android.systemui.recents.events.activity.AppTransitionFinishedEvent;
@@ -274,13 +277,19 @@ import com.android.systemui.statusbar.stack.NotificationStackScrollLayout;
 import com.android.systemui.statusbar.stack.NotificationStackScrollLayout
         .OnChildLocationsChangedListener;
 import com.android.systemui.statusbar.stack.StackStateAnimator;
+import com.android.systemui.tuner.TunerService;
+import com.android.systemui.tuner.TunerService.Tunable;
+import com.android.systemui.statusbar.NotificationBackgroundView;
 import com.android.systemui.util.NotificationChannels;
 import com.android.systemui.util.leak.LeakDetector;
+import com.android.systemui.tuner.TunerService;
+import com.android.systemui.tuner.TunerService.Tunable;
 import com.android.systemui.volume.VolumeComponent;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import android.os.Process;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -3064,7 +3073,35 @@ public class StatusBar extends SystemUI implements DemoMode,
         return ColorManagerHelper.isUsingHazardTheme(mOverlayManager, mCurrentUserId);
     }
 
-    @Nullable
+    public boolean isCurrentRoundedSameAsFw() {
+         Resources res = null;
+         try {
+             res = mContext.getPackageManager().getResourcesForApplication("com.android.systemui");
+         } catch (NameNotFoundException e) {
+             e.printStackTrace();
+             // If we can't get resources, return true so that updateTheme doesn't attempt to
+             // set corner values
+             return true;
+         }
+
+         // Resource IDs for framework properties
+         int resourceIdRadius = res.getIdentifier("com.android.systemui:dimen/rounded_corner_radius", null, null);
+         int resourceIdPadding = res.getIdentifier("com.android.systemui:dimen/rounded_corner_content_padding", null, null);
+
+         // Values on framework resources
+         int cornerRadiusRes = res.getDimensionPixelSize(resourceIdRadius);
+         int contentPaddingRes = res.getDimensionPixelSize(resourceIdPadding);
+
+         // Values in Settings DBs
+         int cornerRadius = Settings.System.getInt(mContext.getContentResolver(),
+                 Settings.System.SYSUI_ROUNDED_SIZE, cornerRadiusRes);
+         int contentPadding = Settings.System.getInt(mContext.getContentResolver(),
+                 Settings.System.SYSUI_ROUNDED_CONTENT_PADDING, contentPaddingRes);
+
+         return (cornerRadiusRes == cornerRadius) && (contentPaddingRes == contentPadding);
+     }
+
+   @Nullable
     public View getAmbientIndicationContainer() {
         return mAmbientIndicationContainer;
     }
@@ -5137,6 +5174,29 @@ public class StatusBar extends SystemUI implements DemoMode,
         }
     }
 
+    private void updateRoundedCorner(){
+        boolean sysuiRoundedFwvals = Settings.System.getIntForUser(mContext.getContentResolver(),
+                     Settings.System.SYSUI_ROUNDED_FWVALS, 1, mCurrentUserId) == 1;
+         if (sysuiRoundedFwvals && !isCurrentRoundedSameAsFw()) {
+ 
+             Resources res = null;
+             try {
+                 res = mContext.getPackageManager().getResourcesForApplication("com.android.systemui");
+             } catch (NameNotFoundException e) {
+                 e.printStackTrace();
+             }
+ 
+             if (res != null) {
+                 int resourceIdRadius = res.getIdentifier("com.android.systemui:dimen/rounded_corner_radius", null, null);
+                 Settings.System.putInt(mContext.getContentResolver(),
+                     Settings.System.SYSUI_ROUNDED_SIZE, res.getDimensionPixelSize(resourceIdRadius));
+                 int resourceIdPadding = res.getIdentifier("com.android.systemui:dimen/rounded_corner_content_padding", null, null);
+                 Settings.System.putInt(mContext.getContentResolver(),
+                     Settings.System.SYSUI_ROUNDED_CONTENT_PADDING, res.getDimensionPixelSize(resourceIdPadding));
+             }
+         }
+    }
+
     private void updateDozingState() {
         Trace.traceCounter(Trace.TRACE_TAG_APP, "dozing", mDozing ? 1 : 0);
         Trace.beginSection("StatusBar#updateDozingState");
@@ -6369,6 +6429,9 @@ public class StatusBar extends SystemUI implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.DOUBLE_TAP_SLEEP_GESTURE),
                     false, this, UserHandle.USER_ALL);
+            mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(
+                     Settings.System.SYSUI_ROUNDED_FWVALS),
+                     false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -6404,6 +6467,7 @@ public class StatusBar extends SystemUI implements DemoMode,
             setQsRowsColumns();
             updateBatterySettings();
             setLockscreenDoubleTapToSleep();
+            updateRoundedCorner();
         }
     }
 

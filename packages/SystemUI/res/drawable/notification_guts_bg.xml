@@ -15,8 +15,13 @@
   ~ limitations under the License
   -->
 
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/notification_guts_bg_color" />
-    <!--The radius is 1dp smaller than the notification one, to avoid aliasing bugs on the corners -->
-    <corners android:radius="1dp" />
-</shape>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="#00000000">
+	<item android:top="4.399994dip">
+		<inset>
+			<shape>
+				<solid android:color="@color/notification_guts_bg_color" />
+				<corners android:radius="8.199982dip" />
+			</shape>
+		</inset>
+	</item>
+</ripple>

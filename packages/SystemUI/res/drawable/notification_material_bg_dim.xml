@@ -15,7 +15,7 @@
   ~ limitations under the License
   -->
 <ripple xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:left="4.399994dip" android:right="4.399994dip">
+	<item android:left="0dip" android:right="0dip">
 		<shape>
 			<solid android:color="@color/notification_material_background_dimmed_color" />
 			<corners android:radius="8.199982dip" />

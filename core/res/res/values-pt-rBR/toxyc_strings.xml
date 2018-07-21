@@ -19,7 +19,7 @@
     <string name="global_action_bootloader">Bootloader</string>
     <!-- Shutdown Thread -->
     <string name="global_shutdown_confirm_message">Você tem certeza que quer desligar o dispositivo?</string>
-    <string name="global_restart">Resiniciar</string>
+    <string name="global_restart">Reiniciar</string>
     <string name="global_restart_message">Reiniciando\u2026</string>
     <string name="global_restart_confirm_message">Você tem certeza que quer reiniciar o dispositivo?</string>
     <string name="global_quick_restart">Reinicio rápido</string>

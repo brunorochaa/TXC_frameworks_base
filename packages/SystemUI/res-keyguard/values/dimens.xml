@@ -65,7 +65,7 @@
     <dimen name="disappear_y_translation">-32dp</dimen>
 
     <!-- the size for all the clock sizes -->
-    <dimen name="widget_clock_toxyc_size">175dp</dimen>
+    <dimen name="widget_clock_toxyc_size">200dp</dimen>
 
      <!-- Our custom clock values -->
      <dimen name="widget_toxyc_accent_font_size">45dp</dimen>

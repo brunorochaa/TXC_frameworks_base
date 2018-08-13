@@ -141,6 +141,11 @@ public class BatteryManager {
      * {@hide}
      */
     public static final String EXTRA_TURBO_POWER = "turbo_power";
+    
+    public static final String EXTRA_MOD_LEVEL = "mod_level";
+    public static final String EXTRA_MOD_STATUS = "mod_status";
+    public static final String EXTRA_MOD_TYPE = "mod_type";
+    public static final String EXTRA_MOD_FLAG = "mod_flag";
 
     // values for "status" field in the ACTION_BATTERY_CHANGED Intent
     public static final int BATTERY_STATUS_UNKNOWN = Constants.BATTERY_STATUS_UNKNOWN;
@@ -148,7 +153,7 @@ public class BatteryManager {
     public static final int BATTERY_STATUS_DISCHARGING = Constants.BATTERY_STATUS_DISCHARGING;
     public static final int BATTERY_STATUS_NOT_CHARGING = Constants.BATTERY_STATUS_NOT_CHARGING;
     public static final int BATTERY_STATUS_FULL = Constants.BATTERY_STATUS_FULL;
-
+    
     // values for "health" field in the ACTION_BATTERY_CHANGED Intent
     public static final int BATTERY_HEALTH_UNKNOWN = Constants.BATTERY_HEALTH_UNKNOWN;
     public static final int BATTERY_HEALTH_GOOD = Constants.BATTERY_HEALTH_GOOD;
